@@ -63,9 +63,9 @@ fn main() -> ! {
         dp.I2C1,
         (scl, sda),
         &mut afio.mapr,
-        i2c::Mode::Standard {
+        i2c::Mode::Fast {
             frequency: 400_000.hz(),
-            //duty_cycle: i2c::DutyCycle::Ratio2to1,
+            duty_cycle: i2c::DutyCycle::Ratio2to1,
         },
         clocks,
         &mut rcc.apb1,
