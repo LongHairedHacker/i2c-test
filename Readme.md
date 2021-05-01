@@ -76,3 +76,39 @@ $ cargo run --release
    6: Reset
         at /home/sebastian/.cargo/registry/src/github.com-1ecc6299db9ec823/cortex-m-rt-0.6.13/src/lib.rs:526
 ```
+
+
+Workaround/Solution
+-------------------
+It seems that the problem is somehow cause by link time optimization.
+
+Changing the `[profile.release]` section in Cargo.toml from:
+```toml
+# cargo build/run --release
+[profile.release]
+codegen-units = 1
+debug = 2
+debug-assertions = false # <-
+incremental = false
+lto = 'fat'
+opt-level = 3 # <-
+overflow-checks = false # <-
+```
+
+to
+
+```toml
+# cargo build/run --release
+[profile.release]
+codegen-units = 1
+debug = 2
+debug-assertions = false # <-
+incremental = false
+#lto = 'fat' No more LTO
+opt-level = 3 # <-
+overflow-checks = false # <-
+```
+
+"fixes" the problem for me.
+
+See [stm32f1xx-hal #311](https://github.com/stm32-rs/stm32f1xx-hal/issues/311) for more details.
